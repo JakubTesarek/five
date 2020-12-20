@@ -43,7 +43,7 @@ def main():
                 'pytest',
                 'pytest-cov',
                 'pytest-mock',
-                'requests-mock'
+                'requests-mock',
                 'mypy',
                 'flake8',
                 'flake8-colors',
