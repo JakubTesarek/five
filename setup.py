@@ -1,4 +1,4 @@
-"""Install lmc-radlib and dependencies."""
+"""Install five-in-row and dependencies."""
 
 import sys
 
@@ -11,7 +11,6 @@ def get_package_version():
 
     if optional_version_parameter.startswith('--version'):
         version = optional_version_parameter.split("=")[1]
-        sys.argv = sys.argv[0:number_of_arguments - 1]
     else:
         with open('VERSION', 'rt') as version_file:
             version = version_file.read().strip()
@@ -29,7 +28,7 @@ def main():
         url='https://github.com/JakubTesarek/five',
         author='Jakub Tesárek',
         author_email='jakub@tesarek.me',
-        license='unlicensed',
+        license='GPL-3',
         include_package_data=True,
         packages=['five_in_row'],
         install_requires=[
@@ -54,7 +53,6 @@ def main():
             ],
         }
     )
-
 
 if __name__ == '__main__':
     main()
