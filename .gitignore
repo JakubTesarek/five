@@ -1,3 +1,11 @@
+# secrets
 conf.json
+
+# testing
 .coverage
 htmlcov
+
+# build artifacts
+*.egg-info
+build
+dist

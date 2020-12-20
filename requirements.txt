@@ -1,8 +1,1 @@
-requests
-numpy
-flake8
-mypy
-pytest
-pytest-cov
-pytest-mock
-requests-mock
+.[dev]

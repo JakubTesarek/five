@@ -15,12 +15,12 @@ clean:
 	rm -rf build dist
 	
 lint: clean
-	flake8 five/*
-	mypy  five/*
+	flake8 five_in_row/*
+	mypy  five_in_row/*
 
 test: clean
 	py.test tests/* -s \
-		--cov five \
+		--cov five_in_row \
 		--cov-report html \
 		--cov-report term \
 		--cov-fail-under=100

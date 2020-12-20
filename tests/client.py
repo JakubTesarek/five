@@ -1,6 +1,6 @@
 import pytest
-from five.client import Client
-from five.model import Coord
+from five_in_row.client import Client
+from five_in_row.model import Coord
 
 
 @pytest.mark.unit

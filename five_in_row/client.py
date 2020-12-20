@@ -1,8 +1,8 @@
 from __future__ import annotations
 import requests
 import json
-from five.model import Coord
-from five import types as t
+from five_in_row.model import Coord
+from five_in_row import types as t
 
 
 class JsonAuth(requests.auth.AuthBase):

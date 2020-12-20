@@ -1,7 +1,7 @@
 from __future__ import annotations
 import numpy
 from enum import Enum
-from five import types as t
+from five_in_row import types as t
 
 
 class Coord:
@@ -18,8 +18,8 @@ class Coord:
         """String representation of coordinates."""
         return f'<{self.x}:{self.y}>'
 
-    def __eq__(self, other: Coord) -> bool:
-        return self.x == other.x and self.y == other.y
+    def __eq__(self, other: object) -> bool:
+        return isinstance(other, Coord) and self.x == other.x and self.y == other.y
 
     def _get_adjacent(self, delta_x: int, delta_y: int) -> Coord:
         return Coord(self.x + delta_x, self.y + delta_y)

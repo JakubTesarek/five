@@ -1,5 +1,5 @@
 import pytest
-from five.model import Coord, Player, Board
+from five_in_row.model import Coord, Player, Board
 from textwrap import dedent
 
 
