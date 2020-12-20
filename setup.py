@@ -23,7 +23,7 @@ def main():
     setup(
         name='five-in-row',
         version=get_package_version(),
-        python_requires='>=3.6',
+        python_requires='>=3.7',
         description='Framework for playing piskvorky.jobs.cz',
         long_description='',
         url='https://github.com/JakubTesarek/five',
