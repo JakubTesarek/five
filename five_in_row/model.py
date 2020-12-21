@@ -77,19 +77,39 @@ class Player(Enum):
 
 class Board:
     """Playing board."""
-    def __init__(self, x_bounds: t.Tuple[int], y_bounds: t.Tuple[int]) -> None:
+    def __init__(self, x_bounds: t.Tuple[int, int], y_bounds: t.Tuple[int, int]) -> None:
         self.min_x, self.max_x = x_bounds
         self.min_y, self.max_y = y_bounds
-        self.fields = numpy.full((self.height, self.width), None)
+        self._fields = numpy.full((self.height, self.width), None)
 
     def __str__(self) -> str:
         """String representation of playing board."""
         result = ''
-        for row in self.fields:
+        for row in self._fields:
             for field in row:
                 result += '·' if field is None else str(field)
             result += '\n'
         return result
+
+    def fields(self) -> t.Iterator[t.Tuple[Coord, t.Optional[Player]]]:
+        """Iterate over all fields in format (Coord, Player)."""
+        for y in range(self._fields.shape[0]):
+            for x in range(self._fields.shape[1]):
+                coord = Coord(x, y)
+                yield coord, self[coord]
+
+    def occupied_fields(self, player: Player = None) -> t.Iterator[t.Tuple[Coord, Player]]:
+        """Iterate over all occupied fields in format (Coord, Player)."""
+        for coord, _player in self.fields():
+            if _player is not None:
+                if player is None or player is _player:
+                    yield coord, _player
+
+    def open_fields(self) -> t.Iterator[Coord]:
+        """Iterate over open fields"""
+        for coord, player in self.fields():
+            if player is None:
+                yield coord
 
     @property
     def width(self) -> int:
@@ -101,20 +121,20 @@ class Board:
         """Number of fields vertically (Y-dimension)."""
         return abs(self.min_y - self.max_y) + 1
 
-    def _normalize_coord(self, coord: Coord) -> t.Tuple[int]:
+    def _normalize_coord(self, coord: Coord) -> t.Tuple[int, int]:
         """Map coordinate to <0;with> range."""
         return coord.x - self.min_x, coord.y - self.min_y
 
-    def _denormalize_coord(self, coord: Coord) -> t.Tuple[int]:
+    def _denormalize_coord(self, coord: Coord) -> t.Tuple[int, int]:
         """Map coordinate to <min;max> range."""
         return coord.x + self.min_x, coord.y + self.min_y
 
     def __getitem__(self, coord: Coord) -> t.Optional[Player]:
         """Get field value."""
         denormalized = self._denormalize_coord(coord)
-        return self.fields[denormalized[1], denormalized[0]]
+        return self._fields[denormalized[1], denormalized[0]]
 
     def __setitem__(self, coord: Coord, value: Player) -> None:
         """Set field value."""
         normalized = self._normalize_coord(coord)
-        self.fields[normalized[1], normalized[0]] = value
+        self._fields[normalized[1], normalized[0]] = value

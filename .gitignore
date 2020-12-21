@@ -4,6 +4,7 @@ conf.json
 # testing
 .coverage
 htmlcov
+.mypy-cache
 
 # build artifacts
 *.egg-info

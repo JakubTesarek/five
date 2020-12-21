@@ -16,7 +16,7 @@ clean:
 	
 lint: clean
 	flake8 five_in_row/*
-	mypy  five_in_row/*
+	mypy .
 
 test: clean
 	py.test tests/* -s \

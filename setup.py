@@ -5,7 +5,7 @@ import sys
 from setuptools import setup
 
 
-def get_package_version():
+def get_package_version() -> str:
     number_of_arguments = len(sys.argv)
     optional_version_parameter = sys.argv[-1]
 
@@ -18,7 +18,7 @@ def get_package_version():
     return version
 
 
-def main():
+def main() -> None:
     setup(
         name='five-in-row',
         version=get_package_version(),

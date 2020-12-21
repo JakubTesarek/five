@@ -113,3 +113,46 @@ class TestBoard:
         board = Board((0, 4), (0, 2))
         board[Coord(2, 2)] = Player.x
         assert board[Coord(2, 2)] is Player.x
+
+    def test_iterate_all_fields(self):
+        board = Board((0, 1), (0, 1))
+        board[Coord(0, 0)] = Player.x
+        board[Coord(1, 1)] = Player.o
+
+        assert list(board.fields()) == [
+            (Coord(0, 0), Player.x),
+            (Coord(1, 0), None),
+            (Coord(0, 1), None),
+            (Coord(1, 1), Player.o)
+        ]
+
+    def test_iterate_occupied_fields(self):
+        board = Board((0, 1), (0, 1))
+        board[Coord(0, 0)] = Player.x
+        board[Coord(1, 1)] = Player.o
+
+        assert list(board.occupied_fields()) == [
+            (Coord(0, 0), Player.x),
+            (Coord(1, 1), Player.o)
+        ]
+
+    def test_iterate_fields_occupied_by_player(self):
+        board = Board((0, 1), (0, 1))
+        board[Coord(0, 0)] = Player.x
+        board[Coord(0, 1)] = Player.o
+        board[Coord(1, 1)] = Player.x
+
+        assert list(board.occupied_fields(Player.x)) == [
+            (Coord(0, 0), Player.x),
+            (Coord(1, 1), Player.x)
+        ]
+
+    def test_iterate_open_fields(self):
+        board = Board((0, 1), (0, 1))
+        board[Coord(0, 1)] = Player.o
+
+        assert list(board.open_fields()) == [
+            Coord(0, 0),
+            Coord(1, 0),
+            Coord(1, 1)
+        ]
