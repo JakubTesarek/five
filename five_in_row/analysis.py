@@ -31,7 +31,10 @@ class Sequence:
 
     def __eq__(self, other: object) -> bool:
         """Return True if given other object is equal sequence."""
-        return isinstance(other, Sequence) and self.fields == other.fields and self.player is other.player
+        return isinstance(other, Sequence) \
+            and self.fields == other.fields \
+            and self.direction is other.direction \
+            and self.player is other.player
 
 
 class Analysis:

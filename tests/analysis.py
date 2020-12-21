@@ -47,6 +47,11 @@ class TestSequence:
         s2 = Sequence(Player.x, Direction.right, [Coord(0, 0), Coord(0, 1)])
         assert s1 != s2
 
+    def test_sequence_not_equal_with_different_direction(self):
+        s1 = Sequence(Player.x, Direction.right, [Coord(0, 0), Coord(1, 0)])
+        s2 = Sequence(Player.x, Direction.left, [Coord(0, 0), Coord(1, 0)])
+        assert s1 != s2
+
 
 @pytest.mark.unit
 class TestAnalysis:
@@ -63,16 +68,22 @@ class TestAnalysis:
         assert a.find_sequences(Player.x) == [
             Sequence(Player.x, Direction.right, [Coord(10, 5), Coord(11, 5), Coord(12, 5), Coord(13, 5), Coord(14, 5)]),
             Sequence(Player.x, Direction.right, [Coord(11, 6)]),
-            Sequence(Player.x, Direction.right, [Coord(10, 5), Coord(11, 6)]),
-            Sequence(Player.x, Direction.right, [Coord(11, 5)]),
-            Sequence(Player.x, Direction.right, [Coord(12, 5)]),
-            Sequence(Player.x, Direction.right, [Coord(13, 5)]),
-            Sequence(Player.x, Direction.right, [Coord(14, 5)]),
-            Sequence(Player.x, Direction.right, [Coord(10, 5)]),
-            Sequence(Player.x, Direction.right, [Coord(11, 5), Coord(11, 6)]),
-            Sequence(Player.x, Direction.right, [Coord(12, 5)]),
-            Sequence(Player.x, Direction.right, [Coord(13, 5)]),
-            Sequence(Player.x, Direction.right, [Coord(14, 5)])
+            Sequence(Player.x, Direction.down_right, [Coord(10, 5), Coord(11, 6)]),
+            Sequence(Player.x, Direction.down_right, [Coord(11, 5)]),
+            Sequence(Player.x, Direction.down_right, [Coord(12, 5)]),
+            Sequence(Player.x, Direction.down_right, [Coord(13, 5)]),
+            Sequence(Player.x, Direction.down_right, [Coord(14, 5)]),
+            Sequence(Player.x, Direction.down, [Coord(10, 5)]),
+            Sequence(Player.x, Direction.down, [Coord(11, 5), Coord(11, 6)]),
+            Sequence(Player.x, Direction.down, [Coord(12, 5)]),
+            Sequence(Player.x, Direction.down, [Coord(13, 5)]),
+            Sequence(Player.x, Direction.down, [Coord(14, 5)]),
+            Sequence(Player.x, Direction.up_right, [Coord(10, 5)]),
+            Sequence(Player.x, Direction.up_right, [Coord(11, 5)]),
+            Sequence(Player.x, Direction.up_right, [Coord(12, 5)]),
+            Sequence(Player.x, Direction.up_right, [Coord(13, 5)]),
+            Sequence(Player.x, Direction.up_right, [Coord(14, 5)]),
+            Sequence(Player.x, Direction.up_right, [Coord(11, 6), Coord(12, 5)])
         ]
 
     def test_sequence_detection_on_edge(self):
@@ -83,7 +94,8 @@ class TestAnalysis:
         assert a.find_sequences(Player.x) == [
             Sequence(Player.x, Direction.right, [Coord(1, 1)]),
             Sequence(Player.x, Direction.down_right, [Coord(1, 1)]),
-            Sequence(Player.x, Direction.down, [Coord(1, 1)])
+            Sequence(Player.x, Direction.down, [Coord(1, 1)]),
+            Sequence(Player.x, Direction.up_right, [Coord(1, 1)])
         ]
 
     def test_sequence_detection_surrounded_by_oponnent(self):
@@ -97,7 +109,8 @@ class TestAnalysis:
         assert a.find_sequences(Player.x) == [
             Sequence(Player.x, Direction.right, [Coord(0, 0)]),
             Sequence(Player.x, Direction.down_right, [Coord(0, 0)]),
-            Sequence(Player.x, Direction.down, [Coord(0, 0)])
+            Sequence(Player.x, Direction.down, [Coord(0, 0)]),
+            Sequence(Player.x, Direction.up_right, [Coord(0, 0)])
         ]
 
 

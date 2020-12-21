@@ -56,13 +56,13 @@ class Direction(Enum):
 
     @classmethod
     def positive_directions(cls) -> t.List[Direction]:
-        """List of directions going towards positive coordinates."""
-        return [cls.right, cls.down_right, cls.down]
+        """List of directions going generally from left to right and from up to bottom."""
+        return [cls.right, cls.down_right, cls.down, cls.up_right]
 
     @classmethod
     def negative_directions(cls) -> t.List[Direction]:
-        """List of directions going towards negative coordinates."""
-        return [cls.left, cls.up_left, cls.up]
+        """List of directions going generaly from right to left and from buttom up."""
+        return [cls.left, cls.up_left, cls.up, cls.down_left]
 
 
 class Player(Enum):

@@ -65,13 +65,11 @@ class TestDirection:
 
     def test_positive_directions(self):
         for direction in Direction.positive_directions():
-            assert direction.x >= 0
-            assert direction.y >= 0
+            assert direction in (Direction.right, Direction.down_right, Direction.down, Direction.up_right)
 
     def test_negative_directions(self):
         for direction in Direction.negative_directions():
-            assert direction.x <= 0
-            assert direction.y <= 0
+            assert direction in (Direction.left, Direction.up_left, Direction.up, Direction.down_left)
 
 
 @pytest.mark.unit
