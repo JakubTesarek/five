@@ -1,6 +1,5 @@
 import pytest
-from five_in_row.model import Coord, Player, Board
-from textwrap import dedent
+from five_in_row.model import Coord, Player, Board, Direction
 
 
 @pytest.mark.unit
@@ -19,53 +18,60 @@ class TestCoord:
         c1 = Coord(1, 2)
         assert c1.__repr__() == '<1:2>'
 
-    def test_up_right(self):
-        c1 = Coord(1, 2)
-        c2 = c1.up_right
-        assert c2.x == 2
-        assert c2.y == 1
+    @pytest.mark.parametrize('direction, result', [
+        (Direction.up_right, (11, 19)),
+        (Direction.right, (11, 20)),
+        (Direction.down_right, (11, 21)),
+        (Direction.down, (10, 21)),
+        (Direction.down_left, (9, 21)),
+        (Direction.left, (9, 20)),
+        (Direction.up_left, (9, 19)),
+        (Direction.up, (10, 19))
+    ])
+    def test_adjacent(self, direction, result):
+        c1 = Coord(10, 20)
+        c2 = c1.adjacent(direction)
+        assert c2 == Coord(*result)
 
-    def test_righ(self):
-        c1 = Coord(1, 2)
-        c2 = c1.right
-        assert c2.x == 2
-        assert c2.y == 2
 
-    def test_down_righ(self):
-        c1 = Coord(1, 2)
-        c2 = c1.down_right
-        assert c2.x == 2
-        assert c2.y == 3
+@pytest.mark.unit
+class TestDirection:
+    @pytest.mark.parametrize('direction, x, y', [
+        (Direction.up_right, 1, -1),
+        (Direction.right, 1, 0),
+        (Direction.down_right, 1, 1),
+        (Direction.down, 0, 1),
+        (Direction.down_left, -1, 1),
+        (Direction.left, -1, 0),
+        (Direction.up_left, -1, -1),
+        (Direction.up, 0, -1)
+    ])
+    def test_get_x_y(self, direction, x, y):
+        assert direction.x == x
+        assert direction.y == y
 
-    def test_down(self):
-        c1 = Coord(1, 2)
-        c2 = c1.down
-        assert c2.x == 1
-        assert c2.y == 3
+    @pytest.mark.parametrize('direction, reversed_direction', [
+        (Direction.up_right, Direction.down_left),
+        (Direction.right, Direction.left),
+        (Direction.down_right, Direction.up_left),
+        (Direction.down, Direction.up),
+        (Direction.down_left, Direction.up_right),
+        (Direction.left, Direction.right),
+        (Direction.up_left, Direction.down_right),
+        (Direction.up, Direction.down)
+    ])
+    def test_get_reversed_direction(self, direction, reversed_direction):
+        assert direction.reversed is reversed_direction
 
-    def test_down_left(self):
-        c1 = Coord(1, 2)
-        c2 = c1.down_left
-        assert c2.x == 0
-        assert c2.y == 3
+    def test_positive_directions(self):
+        for direction in Direction.positive_directions():
+            assert direction.x >= 0
+            assert direction.y >= 0
 
-    def test_left(self):
-        c1 = Coord(1, 2)
-        c2 = c1.left
-        assert c2.x == 0
-        assert c2.y == 2
-
-    def test_up_left(self):
-        c1 = Coord(1, 2)
-        c2 = c1.up_left
-        assert c2.x == 0
-        assert c2.y == 1
-
-    def test_up(self):
-        c1 = Coord(1, 2)
-        c2 = c1.up
-        assert c2.x == 1
-        assert c2.y == 1
+    def test_negative_directions(self):
+        for direction in Direction.negative_directions():
+            assert direction.x <= 0
+            assert direction.y <= 0
 
 
 @pytest.mark.unit

@@ -6,7 +6,6 @@ from setuptools import setup
 
 
 def get_package_version() -> str:
-    number_of_arguments = len(sys.argv)
     optional_version_parameter = sys.argv[-1]
 
     if optional_version_parameter.startswith('--version'):
@@ -42,6 +41,7 @@ def main() -> None:
                 'pytest',
                 'pytest-cov',
                 'pytest-mock',
+                'pytest-benchmark',
                 'requests-mock',
                 'mypy',
                 'flake8',
@@ -53,6 +53,7 @@ def main() -> None:
             ],
         }
     )
+
 
 if __name__ == '__main__':
     main()

@@ -15,7 +15,7 @@ clean:
 	rm -rf build dist
 	
 lint: clean
-	flake8 five_in_row/*
+	flake8 .
 	mypy .
 
 test: clean

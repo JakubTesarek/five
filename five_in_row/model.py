@@ -19,50 +19,50 @@ class Coord:
         return f'<{self.x}:{self.y}>'
 
     def __eq__(self, other: object) -> bool:
+        """Returns True if given object is Coord pointing to the same square."""
         return isinstance(other, Coord) and self.x == other.x and self.y == other.y
 
-    def _get_adjacent(self, delta_x: int, delta_y: int) -> Coord:
-        return Coord(self.x + delta_x, self.y + delta_y)
+    def adjacent(self, direction: Direction) -> Coord:
+        """Returns adjacent Coord in given direction."""
+        return Coord(self.x + direction.x, self.y + direction.y)
+
+
+class Direction(Enum):
+    """Direction on a board."""
+
+    up_right = (1, -1)
+    right = (1, 0)
+    down_right = (1, 1)
+    down = (0, 1)
+    down_left = (-1, 1)
+    left = (-1, 0)
+    up_left = (-1, -1)
+    up = (0, -1)
 
     @property
-    def up_right(self) -> Coord:
-        """Coordinate of point diagonally up and right."""
-        return self._get_adjacent(1, -1)
+    def x(self) -> int:
+        """Delta of X coordinate."""
+        return self.value[0]
 
     @property
-    def right(self) -> Coord:
-        """Coordinate of point to the right."""
-        return self._get_adjacent(1, 0)
+    def y(self) -> int:
+        """Delta of Y coordinate."""
+        return self.value[1]
 
     @property
-    def down_right(self) -> Coord:
-        """Coordinate of point down and right."""
-        return self._get_adjacent(1, 1)
+    def reversed(self) -> Direction:
+        """Direction rotated by 180deg."""
+        return Direction((-self.x, -self.y))
 
-    @property
-    def down(self) -> Coord:
-        """Coordinate of point down."""
-        return self._get_adjacent(0, 1)
+    @classmethod
+    def positive_directions(cls) -> t.List[Direction]:
+        """List of directions going towards positive coordinates."""
+        return [cls.right, cls.down_right, cls.down]
 
-    @property
-    def down_left(self) -> Coord:
-        """Coordinate of point down and left."""
-        return self._get_adjacent(-1, 1)
-
-    @property
-    def left(self) -> Coord:
-        """Coordinate of point left."""
-        return self._get_adjacent(-1, 0)
-
-    @property
-    def up_left(self) -> Coord:
-        """Coordinate of point up and left."""
-        return self._get_adjacent(-1, -1)
-
-    @property
-    def up(self) -> Coord:
-        """Coordinate of point up."""
-        return self._get_adjacent(0, -1)
+    @classmethod
+    def negative_directions(cls) -> t.List[Direction]:
+        """List of directions going towards negative coordinates."""
+        return [cls.left, cls.up_left, cls.up]
 
 
 class Player(Enum):
