@@ -5,6 +5,9 @@ default: tests
 build: clean
 	python setup.py sdist bdist_wheel
 
+run.examples:
+	jupyter notebook examples 
+
 clean:
 	find . -name \*.pyc -delete
 	find . -name __pycache__ -delete

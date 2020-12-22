@@ -6,6 +6,39 @@ Five in a row is http client for [piskvorky.jobs.cz](https://piskvorky.jobs.cz/)
 
 > This library is under heavy development. Public API changes often. Features may be added or removed at any time.
 
+
+## Installation
+Five in row can be installed from [PyPi](https://pypi.org/project/five-in-row/).
+
+```sh
+pip install five-in-row
+```
+
+This will install five-in-row client and analysers. You can also install jupyter notebook examples:
+
+```sh
+pip install five-in-row[examples]
+```
+
+Development dependencies:
+
+```sh
+pip install five-in-row[dev]
+```
+
+Or both:
+
+```sh
+pip install five-in-row[dev,examples]
+```
+
+## Running examples
+Jupyter notebook with examples is located `/examples`, you can run it using prepared make command:
+```sh
+make run.examples
+```
+
+
 ## Analysing game state
 
 To start analysing game state, you need to create a board first.

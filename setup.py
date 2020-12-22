@@ -56,8 +56,12 @@ def main() -> None:
                 'flake8-eradicate',
                 'flake8-print',
                 'flake8-todo',
-                'twine'
+                'twine',
             ],
+            'examples': [
+                'notebook',
+                'pandas'
+            ]
         }
     )
 
