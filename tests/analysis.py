@@ -18,11 +18,62 @@ class TestSequence:
 
     def test_sequence_to_string(self):
         s = Sequence(Player.x, Direction.right, [Coord(0, 0), Coord(1, 0)])
-        assert str(s) == '(Direction.right: <0:0>,<1:0>)'
+        assert str(s) == '(Direction.right: <0:0>,<1:0>) <0-0>'
+
+    def test_sequence_with_open_ends_to_string(self):
+        s = Sequence(Player.x, Direction.right, [Coord(0, 0), Coord(1, 0)])
+        s.start_open_points = 3
+        s.end_open_points = 5
+        assert str(s) == '(Direction.right: <0:0>,<1:0>) <3-5 closable>'
 
     def test_sequence_repre(self):
         s = Sequence(Player.x, Direction.right, [Coord(0, 0), Coord(1, 0)])
-        assert s.__repr__() == '(Direction.right: <0:0>,<1:0>)'
+        assert s.__repr__() == '(Direction.right: <0:0>,<1:0>) <0-0>'
+
+    def test_sequence_repre_with_open_ends(self):
+        s = Sequence(Player.x, Direction.right, [Coord(0, 0), Coord(1, 0)])
+        s.start_open_points = 3
+        s.end_open_points = 5
+        assert s.__repr__() == '(Direction.right: <0:0>,<1:0>) <3-5 closable>'
+
+    def test_detect_start_end_of_sequence(self):
+        s = Sequence(Player.x, Direction.right, [Coord(0, 0), Coord(1, 0), Coord(2, 0)])
+        assert s.start == Coord(0, 0)
+        assert s.end == Coord(2, 0)
+
+    def test_count_missing_points(self):
+        s = Sequence(Player.x, Direction.right, [Coord(0, 0), Coord(1, 0), Coord(2, 0)])
+        assert s.missing_points == 2
+
+    def test_count_missing_points_complete_sequence(self):
+        s = Sequence(Player.x, Direction.right, [Coord(0, 0), Coord(1, 0), Coord(2, 0), Coord(3, 0), Coord(4, 0)])
+        assert s.missing_points == 0
+
+    def test_count_open_points(self):
+        s = Sequence(Player.x, Direction.right, [Coord(0, 0), Coord(1, 0), Coord(2, 0)])
+        s.start_open_points = 3
+        s.end_open_points = 5
+        assert s.surrounding_open_points == 8
+
+    def test_complete_sequence_is_closable_and_closed(self):
+        s = Sequence(Player.x, Direction.right, [Coord(0, 0), Coord(1, 0), Coord(2, 0), Coord(3, 0), Coord(4, 0)])
+        assert s.closable
+        assert s.closed
+
+    def test_incomplete_sequence_is_closable(self):
+        s = Sequence(Player.x, Direction.right, [Coord(0, 0), Coord(1, 0), Coord(2, 0)])
+        s.start_open_points = 3
+        s.end_open_points = 5
+        assert s.closable
+
+    def test_incomplete_sequence_is_not_closable(self):
+        s = Sequence(Player.x, Direction.right, [Coord(0, 0), Coord(1, 0), Coord(2, 0)])
+        assert not s.closable
+
+    def test_detect_start_end_of_sequence_of_single_point_sequence(self):
+        s = Sequence(Player.x, Direction.right, [Coord(0, 0)])
+        assert s.start == Coord(0, 0)
+        assert s.end == Coord(0, 0)
 
     def test_sum_sequences(self):
         s1 = Sequence(Player.x, Direction.right, [Coord(0, 0), Coord(1, 0)])
@@ -112,6 +163,45 @@ class TestAnalysis:
             Sequence(Player.x, Direction.down, [Coord(0, 0)]),
             Sequence(Player.x, Direction.up_right, [Coord(0, 0)])
         ]
+
+    def test_sequence_opennes_detection(self):
+        b = Board((0, 5), (0, 5))
+        b[Coord(1, 2)] = Player.x
+        b[Coord(2, 2)] = Player.x
+        b[Coord(3, 2)] = Player.x
+        b[Coord(4, 2)] = Player.x
+        b[Coord(5, 2)] = Player.x
+        b[Coord(1, 1)] = Player.o
+        b[Coord(2, 1)] = Player.o
+        b[Coord(3, 1)] = Player.o
+
+        # (closable, closed, start_open_points, end_open_points) noqa: E800
+        expected_values = [
+            (True, True, 0, 0),
+            (True, False, 1, 3),
+            (False, False, 0, 3),
+            (False, False, 0, 2),
+            (False, False, 0, 1),
+            (False, False, 2, 0),
+            (False, False, 0, 3),
+            (False, False, 0, 3),
+            (False, False, 0, 3),
+            (True, False, 2, 3),
+            (True, False, 2, 3),
+            (False, False, 1, 0),
+            (False, False, 2, 0),
+            (True, False, 3, 2),
+            (True, False, 3, 1),
+            (False, False, 3, 0)
+        ]
+
+        a = Analysis(b)
+        for sequence in a.find_sequences(Player.x):
+            expected_value = expected_values.pop(0)
+            assert sequence.closable == expected_value[0]
+            assert sequence.closed == expected_value[1]
+            assert sequence.start_open_points == expected_value[2]
+            assert sequence.end_open_points == expected_value[3]
 
 
 @pytest.mark.performance

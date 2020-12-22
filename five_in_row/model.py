@@ -74,6 +74,12 @@ class Player(Enum):
         """String representation of symbol."""
         return self.value
 
+    @property
+    def opponent(self) -> Player:
+        if self is Player.x:
+            return Player.o
+        return Player.x
+
 
 class Board:
     """Playing board."""
@@ -131,10 +137,17 @@ class Board:
 
     def __getitem__(self, coord: Coord) -> t.Optional[Player]:
         """Get field value."""
+        if coord not in self:
+            raise IndexError(f'Coordinate {coord} is out of board bounds.')
         denormalized = self._denormalize_coord(coord)
         return self._fields[denormalized[1], denormalized[0]]
 
     def __setitem__(self, coord: Coord, value: Player) -> None:
         """Set field value."""
+        if coord not in self:
+            raise IndexError(f'Coordinate {coord} is out of board bounds.')
         normalized = self._normalize_coord(coord)
         self._fields[normalized[1], normalized[0]] = value
+
+    def __contains__(self, coord: Coord) -> bool:
+        return (self.min_x <= coord.x <= self.max_x) and (self.min_y <= coord.y <= self.max_y)

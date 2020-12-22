@@ -81,6 +81,10 @@ class TestPlayer:
     def test_players_are_not_equal(self):
         assert Player.x != Player.o
 
+    def test_opponent(self):
+        assert Player.x.opponent is Player.o
+        assert Player.o.opponent is Player.x
+
 
 @pytest.mark.unit
 class TestBoard:
@@ -117,6 +121,53 @@ class TestBoard:
         board = Board((0, 4), (0, 2))
         board[Coord(2, 2)] = Player.x
         assert board[Coord(2, 2)] is Player.x
+
+    @pytest.mark.parametrize('coord', [
+        Coord(-1, -1),
+        Coord(-1, 1),
+        Coord(1, 3),
+        Coord(5, 3),
+    ])
+    def test_set_item_out_of_bounds(self, coord):
+        board = Board((0, 4), (0, 2))
+        with pytest.raises(IndexError):
+            board[coord] = Player.x
+
+    @pytest.mark.parametrize('coord', [
+        Coord(-1, -1),
+        Coord(-1, 1),
+        Coord(1, 3),
+        Coord(5, 3),
+    ])
+    def test_get_item_out_of_bounds(self, coord):
+        board = Board((0, 4), (0, 2))
+        with pytest.raises(IndexError):
+            board[coord]
+
+    @pytest.mark.parametrize('coord', [
+        Coord(-1, -1),
+        Coord(-1, 1),
+        Coord(1, 3),
+        Coord(5, 3),
+    ])
+    def test_doesnt_contain_item_out_of_bounds(self, coord):
+        board = Board((0, 4), (0, 2))
+        assert coord not in board
+
+    @pytest.mark.parametrize('coord', [
+        Coord(0, 0),
+        Coord(0, 1),
+        Coord(0, 2),
+        Coord(1, 0),
+        Coord(1, 1),
+        Coord(1, 2),
+        Coord(2, 0),
+        Coord(2, 1),
+        Coord(2, 2),
+    ])
+    def test_contains_items_in_bounds(self, coord):
+        board = Board((0, 2), (0, 2))
+        assert coord in board
 
     def test_iterate_all_fields(self):
         board = Board((0, 1), (0, 1))
