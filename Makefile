@@ -13,19 +13,21 @@ clean:
 	find . -name __pycache__ -delete
 	rm -rf .mypy_cache
 	rm -rf *.egg-info
-	rm -rf .pytest_cache
+	rm -rf .pytest_cache .benchmarks
 	rm -rf htmlcov .coverage
 	rm -rf build dist
 	
-lint: clean
+check.lint: clean
 	flake8 .
+
+check.typing:
 	mypy .
 
-test: clean
+check.tests: clean
 	py.test tests/* -s \
 		--cov five_in_row \
 		--cov-report html \
 		--cov-report term \
 		--cov-fail-under=100
 
-tests: clean lint test
+check.all: clean check.lint check.typing check.tests

@@ -211,3 +211,12 @@ class TestBoard:
             Coord(1, 0),
             Coord(1, 1)
         ]
+
+    def test_open_field(self):
+        board = Board((0, 1), (0, 1))
+        assert board.is_open(Coord(0, 0))
+
+    def test_not_open_field(self):
+        board = Board((0, 1), (0, 1))
+        board[Coord(0, 0)] = Player.o
+        assert not board.is_open(Coord(0, 0))

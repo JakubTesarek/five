@@ -203,6 +203,22 @@ class TestAnalysis:
             assert sequence.start_open_points == expected_value[2]
             assert sequence.end_open_points == expected_value[3]
 
+    def test_find_empty_attached_fields(self):
+        b = Board((0, 30), (0, 30))
+        b[Coord(15, 15)] = Player.x
+        a = Analysis(b)
+
+        assert a.find_empty_adjacent_fields() == set([
+            Coord(14, 14),
+            Coord(14, 15),
+            Coord(15, 14),
+            Coord(16, 16),
+            Coord(14, 16),
+            Coord(15, 16),
+            Coord(16, 15),
+            Coord(16, 14)
+        ])
+
 
 @pytest.mark.performance
 class TestAnalysisPerformance:

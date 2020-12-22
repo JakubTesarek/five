@@ -134,3 +134,13 @@ class Analysis:
             sequence += self._find_directional_sequence(adjacent, player, direction)
 
         return sequence
+
+    def find_empty_adjacent_fields(self) -> t.Set[Coord]:
+        """Get all empty coords that are attached to a non-empty coord."""
+        fields = set()
+        for field in self.board.open_fields():
+            for direction in Direction:
+                adjacent_field = field.adjacent(direction)
+                if adjacent_field in self.board and not self.board.is_open(adjacent_field):
+                    fields.add(field)
+        return fields

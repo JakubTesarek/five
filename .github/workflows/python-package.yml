@@ -24,7 +24,10 @@ jobs:
         python -m pip install -e .[dev]
     - name: Lint
       run: |
-        make lint
+        make check.lint
+    - name: Typing
+      run: |
+        make check.typing
     - name: Test
       run: |
-        make test
+        make check.tests

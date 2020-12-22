@@ -5,6 +5,7 @@ conf.json
 .coverage
 htmlcov
 .mypy-cache
+.benchmarks
 
 # build artifacts
 *.egg-info

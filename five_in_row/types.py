@@ -4,4 +4,4 @@ from typing import TYPE_CHECKING
 
 
 if TYPE_CHECKING:
-    from typing import Optional, Dict, Union, Any, List, Tuple, Iterator  # noqa: F401
+    from typing import Optional, Dict, Union, Any, List, Tuple, Iterator, Set  # noqa: F401

@@ -117,6 +117,10 @@ class Board:
             if player is None:
                 yield coord
 
+    def is_open(self, coord: Coord) -> bool:
+        """Returns True if given coordinate is empty."""
+        return self[coord] is None
+
     @property
     def width(self) -> int:
         """Number of fields horizontally (X-dimension)."""
@@ -150,4 +154,5 @@ class Board:
         self._fields[normalized[1], normalized[0]] = value
 
     def __contains__(self, coord: Coord) -> bool:
+        """Returns True if giver coord is in bounds."""
         return (self.min_x <= coord.x <= self.max_x) and (self.min_y <= coord.y <= self.max_y)
