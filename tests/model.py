@@ -33,6 +33,20 @@ class TestCoord:
         c2 = c1.adjacent(direction)
         assert c2 == Coord(*result)
 
+    @pytest.mark.parametrize('c2, distance', [
+        (Coord(0, 0), 7.071067),
+        (Coord(-1, -1), 8.485281),
+        (Coord(-1, 1), 7.211102),
+        (Coord(5, 5), 0.0),
+        (Coord(-1, 5), 6.0),
+        (Coord(5, -1), 6.0),
+        (Coord(10, -1), 7.810249),
+        (Coord(10, 10), 7.071067),
+    ])
+    def test_distance(self, c2, distance):
+        c1 = Coord(5, 5)
+        assert c1.distance(c2) == c2.distance(c1) == pytest.approx(distance)
+
 
 @pytest.mark.unit
 class TestDirection:

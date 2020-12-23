@@ -1,9 +1,9 @@
 from __future__ import annotations
-from five_in_row.model import Direction
+from five_in_row.model import Direction, Coord
 from five_in_row import types as t
 
 if t.TYPE_CHECKING:
-    from five_in_row.model import Player, Coord, Board
+    from five_in_row.model import Player, Board
 
 
 class Sequence:
@@ -77,6 +77,60 @@ class Analysis:
     def __init__(self, board: Board) -> None:
         self.board = board
 
+    def find_sequences(self, player: Player) -> t.List[Sequence]:
+        """Find all sequences belonging to a player."""
+        sequences = []
+        for direction in Direction.positive_directions():
+            sequences.extend(self._find_directional_sequences(player, direction))
+
+        for sequence in sequences:
+            self._detect_open_ends(sequence)
+        return sequences
+
+    def find_empty_adjacent_fields(self) -> t.Set[Coord]:
+        """Get all empty coords that are attached to a non-empty coord."""
+        fields = set()
+        for field in self.board.open_fields():
+            for direction in Direction:
+                adjacent_field = field.adjacent(direction)
+                if adjacent_field in self.board and not self.board.is_open(adjacent_field):
+                    fields.add(field)
+        return fields
+
+    def get_average_center_distance(self, player: Player) -> float:
+        """Calculate average distance of all players coords from center."""
+        center = Coord(
+            int((self.board.max_x + self.board.min_x) / 2),
+            int((self.board.max_y + self.board.min_y) / 2)
+        )
+
+        distances = []
+        for coord, player in self.board.occupied_fields(player):
+            distances.append(coord.distance(center))
+        return (sum(distances) / len(distances)) if distances else 0.0
+
+    def _find_directional_sequences(self, player: Player, direction: Direction) -> t.List[Sequence]:
+        """Find all sequences belonging to a player in given direction."""
+        sequences = []
+        solved_coords = set()
+
+        for coord, _ in self.board.occupied_fields(player):
+            if coord not in solved_coords:
+                sequence = self._find_directional_sequence(coord, player, direction)
+                solved_coords.update(sequence.fields)
+                sequences.append(sequence)
+        return sequences
+
+    def _find_directional_sequence(self, start: Coord, player: Player, direction: Direction) -> Sequence:
+        """Find sequence belonging to a player in given direction starting at given Coord."""
+        sequence = Sequence(player, direction, [start])
+        adjacent = start.adjacent(direction)
+
+        if adjacent in self.board and self.board[adjacent] == player:
+            sequence += self._find_directional_sequence(adjacent, player, direction)
+
+        return sequence
+
     def _detect_open_ends(self, sequence: Sequence) -> None:
         """Count number of open squares at the ends of sequence and assign them."""
         sequence.end_open_points = self._count_open_end(
@@ -102,45 +156,3 @@ class Analysis:
                 break
             free_spaces += 1
         return free_spaces
-
-    def find_sequences(self, player: Player) -> t.List[Sequence]:
-        """Find all sequences belonging to a player."""
-        sequences = []
-        for direction in Direction.positive_directions():
-            sequences.extend(self._find_directional_sequences(player, direction))
-
-        for sequence in sequences:
-            self._detect_open_ends(sequence)
-        return sequences
-
-    def _find_directional_sequences(self, player: Player, direction: Direction) -> t.List[Sequence]:
-        """Find all sequences belonging to a player in given direction."""
-        sequences = []
-        solved_coords = set()
-
-        for coord, _ in self.board.occupied_fields(player):
-            if coord not in solved_coords:
-                sequence = self._find_directional_sequence(coord, player, direction)
-                solved_coords.update(sequence.fields)
-                sequences.append(sequence)
-        return sequences
-
-    def _find_directional_sequence(self, start: Coord, player: Player, direction: Direction) -> Sequence:
-        """Find sequence belonging to a player in given direction starting at given Coord."""
-        sequence = Sequence(player, direction, [start])
-        adjacent = start.adjacent(direction)
-
-        if adjacent in self.board and self.board[adjacent] == player:
-            sequence += self._find_directional_sequence(adjacent, player, direction)
-
-        return sequence
-
-    def find_empty_adjacent_fields(self) -> t.Set[Coord]:
-        """Get all empty coords that are attached to a non-empty coord."""
-        fields = set()
-        for field in self.board.open_fields():
-            for direction in Direction:
-                adjacent_field = field.adjacent(direction)
-                if adjacent_field in self.board and not self.board.is_open(adjacent_field):
-                    fields.add(field)
-        return fields

@@ -2,6 +2,7 @@ from __future__ import annotations
 import numpy
 from enum import Enum
 from five_in_row import types as t
+import math
 
 
 class Coord:
@@ -25,6 +26,10 @@ class Coord:
     def adjacent(self, direction: Direction) -> Coord:
         """Returns adjacent Coord in given direction."""
         return Coord(self.x + direction.x, self.y + direction.y)
+
+    def distance(self, coord: Coord) -> float:
+        """Calculate distance from to another Coord."""
+        return math.sqrt(pow(abs(self.x - coord.x), 2) + pow(abs(self.y - coord.y), 2))
 
 
 class Direction(Enum):

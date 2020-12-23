@@ -219,6 +219,30 @@ class TestAnalysis:
             Coord(16, 14)
         ])
 
+    def test_average_distance_no_fields(self):
+        b = Board((0, 30), (0, 30))
+        a = Analysis(b)
+        assert a.get_average_center_distance(Player.x) == 0.0
+
+    def test_average_distance_single_field_in_center(self):
+        b = Board((0, 30), (0, 30))
+        b[Coord(15, 15)] = Player.x
+        a = Analysis(b)
+        assert a.get_average_center_distance(Player.x) == 0.0
+
+    def test_average_distance_single_field_off_center(self):
+        b = Board((0, 30), (0, 30))
+        b[Coord(13, 13)] = Player.x
+        a = Analysis(b)
+        assert a.get_average_center_distance(Player.x) == pytest.approx(2.828427)
+
+    def test_average_distance_multiple_fields_off_center(self):
+        b = Board((0, 30), (0, 30))
+        b[Coord(13, 13)] = Player.x
+        b[Coord(18, 22)] = Player.x
+        a = Analysis(b)
+        assert a.get_average_center_distance(Player.x) == pytest.approx(5.222100)
+
 
 @pytest.mark.performance
 class TestAnalysisPerformance:
